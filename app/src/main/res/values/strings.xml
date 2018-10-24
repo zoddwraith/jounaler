@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Journaler</string>
+    <string name="title">Title</string>
+    <string name="your_note_content_goes_here">Your note content goes here</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="pick_time">Pick time</string>
+    <string name="mnu">Pick time</string>
+    <string name="today">Today</string>
+    <string name="next_seven_days">Next seven days</string>
+    <string name="todos">TODOS</string>
+    <string name="notes">Notes</string>
+    <string name="choose_a_type">Choose a type</string>
+</resources>
