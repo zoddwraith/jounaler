@@ -1,5 +1,7 @@
 package com.journaler.fragment
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -9,8 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationSet
+import android.view.animation.BounceInterpolator
 import com.journaler.R
+import com.journaler.R.id.new_item
 import com.journaler.activity.NoteActivity
+import com.journaler.activity.TEST
 import com.journaler.activity.TodoActivity
 import com.journaler.model.MODE
 import java.text.SimpleDateFormat
@@ -31,19 +37,26 @@ class ItemsFragment:BaseFragment(){
         val view = inflater?.inflate(getLayout(),container,false)
         val btn = view?.findViewById<FloatingActionButton>(R.id.new_item)
         btn?.setOnClickListener {
+            animate(btn)
             val items = arrayOf(getString(R.string.todos), getString(R.string.notes))
             var builder =
                 AlertDialog.Builder(this@ItemsFragment.context)
                     .setTitle(R.string.choose_a_type)
+                    .setCancelable(true)
+                    .setOnCancelListener{
+                        animate(btn,false)
+                    }
                     .setItems(
                         items,
                         { _, which ->
                             when (which) {
                                 0 -> {
                                     openCreateTodo()
+                                    animate(btn,false)
                                 }
                                 1 -> {
                                     openCreateNote()
+                                    animate(btn,false)
                                 }
                                 else -> Log.e(logTag, "Unknown option selected [$which]")
                             }
@@ -53,6 +66,27 @@ class ItemsFragment:BaseFragment(){
 
         }
         return view
+
+    }
+
+    private fun animate(btn:FloatingActionButton,expand:Boolean = true){
+        val animation1=ObjectAnimator.ofFloat(btn,"scaleX",if(expand){1.5f} else {1.0f})
+        animation1.duration=2000
+        animation1.interpolator=BounceInterpolator()
+        val animation2=ObjectAnimator.ofFloat(btn,"scaleY",if(expand){1.5f} else {1.0f})
+        animation1.duration=2000
+        animation1.interpolator=BounceInterpolator()
+        val animation3=ObjectAnimator.ofFloat(btn,"alpha",if(expand){0.3f} else {1.0f})
+        animation1.duration=500
+        animation1.interpolator=BounceInterpolator()
+
+        val set = AnimatorSet()
+
+        set.play(animation1).with(animation2).before(animation3)
+
+        set.start()
+
+
 
     }
 
@@ -75,10 +109,12 @@ class ItemsFragment:BaseFragment(){
         data.putString(TodoActivity.EXTRA_TIME,timeFormat.format(date))
         intent.putExtras(data)
         startActivityForResult(intent,TODO_REQUEST)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         when (requestCode){
             TODO_REQUEST -> {
                 if(resultCode==Activity.RESULT_OK){

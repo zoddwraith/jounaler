@@ -14,11 +14,13 @@ abstract class ItemActivity : BaseActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val data = intent.extras
+        /*val data = intent.extras
             data?.let {
                 val modeToSet = data.getInt(MODE.EXTRAS_KEY, MODE.VIEW.mode)
                 mode = MODE.getByValue(modeToSet)
-            }
+            }*/
+        val modeToSet = intent.getIntExtra(MODE.EXTRAS_KEY,MODE.VIEW.mode)
+        mode = MODE.getByValue(modeToSet)
         Log.v(tag,"Mode [ $mode ] ")
     }
 
