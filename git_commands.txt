@@ -1,0 +1,3 @@
+git add .
+git commit -m "26/10/2018"
+git push -u origin master
